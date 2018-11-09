@@ -48,7 +48,6 @@ FROM
 		clicks,
 		cost,
 		qualityscore
-		
 	FROM    
 		adwords_keywordreport
 	WHERE   
@@ -87,8 +86,9 @@ FROM
     			1,2	
     	
     			) kw ON ga.campaignid = kw.campaignid AND ga.adgroupid = kw.adgroupid
-	WHERE 	
-		kw.campaignid IS NULL
+	WHERE 
+		ga.day >= (SELECT dt FROM #start)
+		AND kw.campaignid IS NULL
 ) awdata
 
 
@@ -170,4 +170,11 @@ LEFT JOIN
 GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12
 ;
 
-Select * From #adwords_spend
+SELECT
+	COUNT(campaignid)
+FROM
+	#adwords_spend
+	
+SELECT TOP 1000 *
+FROM #adwords_spend
+WHERE mappedsubject = 'no subject'
